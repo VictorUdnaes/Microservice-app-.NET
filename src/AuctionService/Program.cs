@@ -9,6 +9,7 @@ builder.Services.AddDbContext<AuctionDbContext>(opt =>
 {
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Looks for MappingProfile class by checking if it derives from the Profile class.
 
 var app = builder.Build();
 
@@ -19,7 +20,7 @@ app.MapControllers();
 
 try
 {
-    DbInitializer.InitDb(app);
+    DbInitializer.InitDb(app); // Calls static DbInitializer class and attempts to start the database.
 }
 catch (Exception e)
 {

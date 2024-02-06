@@ -7,16 +7,16 @@ public class DbInitializer
 {
     public static void InitDb(WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        using var scope = app.Services.CreateScope(); // The scope is used to manage the lifecycle of the service so it's get properly disposed of after it used.
 
-        SeedData(scope.ServiceProvider.GetService<AuctionDbContext>());
+        SeedData(scope.ServiceProvider.GetService<AuctionDbContext>()); // Passes the AuctionDbContext to the SeedData method.
     }
 
     private static void SeedData(AuctionDbContext context)
     {
-        context.Database.Migrate();
+        context.Database.Migrate(); // Applies pending migrations to the database, if it doesn't exist this method creates the database
 
-        if (context.Auctions.Any())
+        if (context.Auctions.Any()) // Checks if the database contains data.
         {
             Console.WriteLine("Already have data - no need to seed");
             return;
@@ -204,8 +204,8 @@ public class DbInitializer
             }
         };
         
-        context.AddRange(auctions);
+        context.AddRange(auctions); // Like "commiting" the new data before it's saved.
 
-        context.SaveChanges();
+        context.SaveChanges(); // Saves changes to the database, effectively seeding the data.
     }
 }
